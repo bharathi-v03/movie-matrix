@@ -1,13 +1,13 @@
 import InfiniteMovieGrid from "@/components/InfiniteMovieGrid";
-import { getPopularMovies } from "@/services/tmdb";
+import { getUpcomingMovies } from "@/services/tmdb";
 
 export default async function UpcomingPage() {
-  const data = await getPopularMovies(1);
+  const data = await getUpcomingMovies(1);
 
   return (
     <InfiniteMovieGrid
       initialMovies={data.results}
-      apiUrl="/api/movies/popular"
+      apiUrl="/api/movies/upcoming"
     />
   );
 }

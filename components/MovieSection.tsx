@@ -9,12 +9,13 @@ import LimitedMovieGrid from "./LimitedMovieGrid";
 import SmartSearch from "./SmartSearch";
 
 export default async function MovieSection() {
-  const [trendingMovies, topRatedMovies, popularMovies, upcomingMovies] = await Promise.all([
-    getTrendingMovies(1),
-    getTopRatedMovies(1),
-    getPopularMovies(1),
-    getUpcomingMovies(1),
-  ]);
+  const [trendingMovies, topRatedMovies, popularMovies, upcomingMovies] =
+    await Promise.all([
+      getTrendingMovies(1),
+      getTopRatedMovies(1),
+      getPopularMovies(1),
+      getUpcomingMovies(1),
+    ]);
 
   const sections = [
     {
@@ -40,7 +41,7 @@ export default async function MovieSection() {
   ];
 
   return (
-    <section className="space-y-10">
+    <section className="p-6 space-y-10">
       <SmartSearch />
       {sections.map((section) => (
         <div key={section.href}>

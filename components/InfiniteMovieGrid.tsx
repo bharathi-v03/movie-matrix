@@ -29,6 +29,14 @@ export default function InfiniteMovieGrid({
 
       const data = await response.json();
 
+      if (apiUrl === "/api/movies/upcoming") {
+        const today = new Date();
+
+        data.results = data.results.filter((movie: any) => {
+          return new Date(movie.release_date) > today;
+        });
+      }
+
       setMovies((prev) => {
         const existingIds = new Set(prev.map((movie) => movie.id));
 
