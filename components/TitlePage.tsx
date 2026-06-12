@@ -19,6 +19,7 @@ const TitlePage = () => {
               alt=""
               fill
               className="object-cover"
+              loading="eager"
             />
           </div>
 
@@ -28,6 +29,7 @@ const TitlePage = () => {
               alt=""
               fill
               className="object-cover"
+              loading="eager"
             />
           </div>
         </div>
