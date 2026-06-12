@@ -1,7 +1,13 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 import Link from "next/link";
-import { ArrowLeft, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 export default function PageHeader({ title }: { title: string }) {
+  const router = useRouter();
+
   return (
     <div
       className="
@@ -12,14 +18,15 @@ export default function PageHeader({ title }: { title: string }) {
       "
     >
       <div className="mx-auto flex items-center gap-4 px-6 py-4">
-        <Link
-          href="/"
+        <button
+          onClick={() => router.back()}
           className="
             group
             flex h-10 w-10 items-center justify-center
             transition-all
             duration-300
             hover:text-red-500
+            cursor-pointer
           "
         >
           <ChevronLeft
@@ -27,7 +34,7 @@ export default function PageHeader({ title }: { title: string }) {
             strokeWidth={4}
             className="transition-transform group-hover:-translate-x-1"
           />
-        </Link>
+        </button>
 
         <div>
           <h1 className="text-3xl font-bold text-white">{title}</h1>

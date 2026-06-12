@@ -67,6 +67,7 @@ export default async function MovieSection() {
               hover:text-red-500
             "
           >
+            <span className="h-8 w-1 rounded-full bg-red-500" />
             <span>{section.title}</span>
 
             <ChevronRight

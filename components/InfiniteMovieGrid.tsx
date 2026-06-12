@@ -162,7 +162,7 @@ export default function InfiniteMovieGrid({
       </div>
 
       {loading && (
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6">
           {Array.from({ length: 5 }).map((_, index) => (
             <div
               key={index}

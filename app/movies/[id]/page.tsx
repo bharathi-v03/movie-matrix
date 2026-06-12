@@ -3,6 +3,10 @@ import Link from "next/link";
 
 import { getMovieDetails } from "@/services/tmdb";
 import { IMAGE_BASE_URL } from "@/constants";
+import PageHeader from "@/components/PageHeader";
+import { Star, ExternalLink } from "lucide-react";
+import LimitedMovieGrid from "@/components/LimitedMovieGrid";
+import TitleComponent from "@/components/TitleComponent";
 
 export default async function MovieDetailsPage({
   params,
@@ -21,265 +25,321 @@ export default async function MovieDetailsPage({
 
   const recommendations = movie.recommendations?.results?.slice(0, 8) || [];
 
-  const similarMovies = movie.similar?.results?.slice(0, 8) || [];
+  const productionCompany = movie.production_companies?.[0]?.name || "Unknown";
+
+  const productionCountries: string =
+    Array.from(
+      new Set(
+        (movie.production_countries ?? []).map((country: any) => country.name),
+      ),
+    ).join(", ") || "Unknown";
+
+  const hasBudget = movie.budget > 0;
+  const hasRevenue = movie.revenue > 0;
+
+  const formatMoney = (amount: number) => {
+    if (!amount || amount <= 0) return "N/A";
+
+    const format = (value: number, suffix: string) =>
+      `$${Number(value.toFixed(1))}${suffix}`;
+
+    if (amount >= 1_000_000_000) {
+      return format(amount / 1_000_000_000, "B");
+    }
+
+    if (amount >= 1_000_000) {
+      return format(amount / 1_000_000, "M");
+    }
+
+    if (amount >= 1_000) {
+      return format(amount / 1_000, "K");
+    }
+
+    return `$${amount}`;
+  };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-12">
-      <div className="grid md:grid-cols-4 gap-8">
-        <div>
-          <Image
-            src={`${IMAGE_BASE_URL}${movie.poster_path}`}
-            alt={movie.title}
-            width={400}
-            height={600}
-            className="rounded-lg w-full"
-          />
-        </div>
+    <>
+      <PageHeader title={movie.title} />
+      <div className="relative h-[75vh] overflow-hidden">
+        <Image
+          src={`${IMAGE_BASE_URL}${movie.backdrop_path}`}
+          alt={movie.title}
+          fill
+          priority
+          className="object-cover"
+        />
 
-        <div>
-          <Image
-            src={`${IMAGE_BASE_URL}${movie.backdrop_path}`}
-            alt={movie.title}
-            width={500}
-            height={600}
-            className="rounded-lg w-full h-full object-cover"
-          />
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
-        <div className="md:col-span-2 space-y-3">
-          <h1 className="text-4xl font-bold">{movie.title}</h1>
+        <div className="absolute inset-0">
+          <div className="mx-auto flex h-full max-w-7xl items-end px-6 pb-12">
+            <div className="flex flex-col gap-8 md:flex-row md:items-end">
+              <Image
+                src={`${IMAGE_BASE_URL}${movie.poster_path}`}
+                alt={movie.title}
+                width={280}
+                height={420}
+                className="
+                  rounded-2xl
+                  border border-white/10
+                  shadow-[0_20px_80px_rgba(0,0,0,0.7)]
+                "
+              />
 
-          {movie.tagline && (
-            <p className="italic text-gray-500">{movie.tagline}</p>
-          )}
+              <div className="max-w-3xl space-y-5">
+                <div>
+                  <h1 className="text-5xl font-extrabold tracking-tight">
+                    {movie.title}
+                  </h1>
 
-          <p className="text-yellow-500 text-lg">
-            ⭐ {movie.vote_average?.toFixed(1)} / 10 ({movie.vote_count} votes)
-          </p>
+                  {movie.tagline && (
+                    <p className="mt-2 text-lg italic text-gray-400">
+                      {movie.tagline}
+                    </p>
+                  )}
+                </div>
 
-          <p>
-            <b>Status:</b> {movie.status}
-          </p>
+                <div className="flex flex-wrap gap-3">
+                  <div className="flex items-center gap-2 rounded-full bg-red-500 px-4 py-2 font-semibold">
+                    <Star
+                      size={16}
+                      fill="currentColor"
+                      className="text-yellow-300"
+                    />
+                    {movie.vote_average.toFixed(1)}
+                  </div>
 
-          <p>
-            <b>Release Date:</b> {movie.release_date}
-          </p>
+                  <div className="rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
+                    {movie.runtime} min
+                  </div>
 
-          <p>
-            <b>Runtime:</b> {movie.runtime} min
-          </p>
+                  <div className="rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
+                    {movie.release_date}
+                  </div>
 
-          <p>
-            <b>Language:</b> {movie.original_language?.toUpperCase()}
-          </p>
+                  <div className="rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
+                    {movie.status}
+                  </div>
+                </div>
 
-          <p>
-            <b>Popularity:</b> {movie.popularity?.toFixed(0)}
-          </p>
+                <div className="flex flex-wrap gap-2">
+                  {movie.genres?.map((genre: any) => (
+                    <span
+                      key={genre.id}
+                      className="
+                        rounded-full
+                        border border-red-500/30
+                        bg-red-500/10
+                        px-4 py-2
+                        text-sm
+                        text-red-300
+                        backdrop-blur-sm
+                      "
+                    >
+                      {genre.name}
+                    </span>
+                  ))}
+                </div>
 
-          <p>
-            <b>Adult:</b> {movie.adult ? "Yes" : "No"}
-          </p>
-
-          <p>
-            <b>Origin Country:</b> {movie.origin_country?.join(", ")}
-          </p>
-
-          <div className="flex flex-wrap gap-2 pt-2">
-            {movie.genres?.map((genre: any) => (
-              <span
-                key={genre.id}
-                className="px-3 py-1 rounded-full bg-gray-200 text-sm"
-              >
-                {genre.name}
-              </span>
-            ))}
+                <p className="max-w-2xl text-gray-300 line-clamp-4">
+                  {movie.overview}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <div className="max-w-7xl mx-auto px-6 space-y-12 py-6">
+        {trailer && (
+          <section>
+            <TitleComponent title="Trailer" />
 
-      {/* OVERVIEW */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-3">Overview</h2>
+            <div className="aspect-video overflow-hidden rounded-lg">
+              <iframe
+                src={`https://www.youtube.com/embed/${trailer.key}`}
+                title={trailer.name}
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+          </section>
+        )}
 
-        <p className="leading-relaxed text-gray-700">{movie.overview}</p>
-      </section>
+        {cast.length > 0 && (
+          <section>
+            <TitleComponent title="Cast" />
 
-      {/* TRAILER */}
-      {trailer && (
+            <div
+              className="
+                flex gap-4 overflow-x-auto
+                pb-4
+                [&::-webkit-scrollbar]:hidden
+              "
+            >
+              {cast.map((actor: any) => (
+                <div key={actor.id} className="w-32 flex-shrink-0">
+                  {actor.profile_path ? (
+                    <Image
+                      src={`${IMAGE_BASE_URL}${actor.profile_path}`}
+                      alt={actor.name}
+                      width={150}
+                      height={225}
+                      className="rounded-lg mx-auto"
+                    />
+                  ) : (
+                    <div className="w-[150px] h-[225px] bg-gray-200 rounded-lg mx-auto" />
+                  )}
+
+                  <p className="mt-2 font-medium">{actor.name}</p>
+
+                  <p className="text-sm text-gray-500">{actor.character}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         <section>
-          <h2 className="text-2xl font-semibold mb-4">Trailer</h2>
+          <TitleComponent title="Movie Information" />
 
-          <div className="aspect-video overflow-hidden rounded-lg">
-            <iframe
-              src={`https://www.youtube.com/embed/${trailer.key}`}
-              title={trailer.name}
-              allowFullScreen
-              className="w-full h-full"
-            />
-          </div>
-        </section>
-      )}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div
+              className="
+                rounded-2xl
+                border border-white/10
+                bg-white/5
+                p-6
+                backdrop-blur-sm
+              "
+            >
+              <p className="text-sm text-gray-400">Production Company</p>
 
-      {/* CAST */}
-      {cast.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Cast</h2>
+              <p className="mt-2 text-lg font-semibold">{productionCompany}</p>
+            </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {cast.map((actor: any) => (
-              <div key={actor.id} className="text-center">
-                {actor.profile_path ? (
-                  <Image
-                    src={`${IMAGE_BASE_URL}${actor.profile_path}`}
-                    alt={actor.name}
-                    width={150}
-                    height={225}
-                    className="rounded-lg mx-auto"
-                  />
-                ) : (
-                  <div className="w-[150px] h-[225px] bg-gray-200 rounded-lg mx-auto" />
-                )}
+            <div
+              className="
+                rounded-2xl
+                border border-white/10
+                bg-white/5
+                p-6
+                backdrop-blur-sm
+              "
+            >
+              <p className="text-sm text-gray-400">Production Country</p>
 
-                <p className="mt-2 font-medium">{actor.name}</p>
+              <p className="mt-2 text-lg font-semibold">
+                {productionCountries}
+              </p>
+            </div>
 
-                <p className="text-sm text-gray-500">{actor.character}</p>
+            {hasBudget && (
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <p className="text-sm text-gray-400">Budget</p>
+
+                <p className="mt-2 text-lg font-semibold">
+                  {formatMoney(movie.budget)}
+                </p>
               </div>
-            ))}
+            )}
+
+            {hasRevenue && (
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <p className="text-sm text-gray-400">Revenue</p>
+
+                <p className="mt-2 text-lg font-semibold">
+                  {formatMoney(movie.revenue)}
+                </p>
+              </div>
+            )}
           </div>
         </section>
-      )}
 
-      {/* COLLECTION */}
-      {movie.belongs_to_collection && (
         <section>
-          <h2 className="text-2xl font-semibold mb-3">Collection</h2>
-
-          <p>{movie.belongs_to_collection.name}</p>
-        </section>
-      )}
-
-      {/* PRODUCTION INFO */}
-      <section className="grid md:grid-cols-2 gap-6">
-        <div>
-          <h2 className="text-2xl font-semibold mb-3">Production Companies</h2>
-
-          <ul className="space-y-1">
-            {movie.production_companies?.map((company: any) => (
-              <li key={company.id}>{company.name}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-semibold mb-3">Production Countries</h2>
-
-          <p>
-            {movie.production_countries
-              ?.map((country: any) => country.name)
-              .join(", ")}
-          </p>
-        </div>
-      </section>
-
-      {/* LANGUAGES */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-3">Spoken Languages</h2>
-
-        <p>
-          {movie.spoken_languages
-            ?.map((lang: any) => lang.english_name)
-            .join(", ")}
-        </p>
-      </section>
-
-      {/* FINANCIALS */}
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">Financials</h2>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="border rounded-lg p-4">
-            <p className="font-semibold">Budget</p>
-            <p>${movie.budget?.toLocaleString() || "Unknown"}</p>
+          <div className="mb-6 flex items-center gap-3">
+            <div className="h-8 w-1 rounded-full bg-red-500" />
+            <h2 className="text-3xl font-bold">Links</h2>
           </div>
 
-          <div className="border rounded-lg p-4">
-            <p className="font-semibold">Revenue</p>
-            <p>${movie.revenue?.toLocaleString() || "Unknown"}</p>
-          </div>
-        </div>
-      </section>
+          <div className="flex flex-wrap gap-4">
+            {movie.homepage && (
+              <a
+                href={movie.homepage}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  group
+                  flex items-center gap-3
+                  rounded-2xl
+                  border border-white/10
+                  bg-white/5
+                  px-5 py-3
+                  backdrop-blur-sm
+                  transition-all
+                  duration-300
+                  hover:border-red-500/50
+                  hover:bg-red-500
+                "
+              >
+                <span className="font-medium">Official Website</span>
 
-      {/* RECOMMENDATIONS */}
-      {recommendations.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Recommended Movies</h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {recommendations.map((movie: any) => (
-              <Link key={movie.id} href={`/movies/${movie.id}`}>
-                <Image
-                  src={`${IMAGE_BASE_URL}${movie.poster_path}`}
-                  alt={movie.title}
-                  width={200}
-                  height={300}
-                  className="rounded-lg hover:scale-105 transition"
+                <ExternalLink
+                  size={16}
+                  className="
+                    transition-transform
+                    duration-300
+                    group-hover:translate-x-1
+                    group-hover:-translate-y-1
+                  "
                 />
+              </a>
+            )}
 
-                <p className="mt-2 text-sm">{movie.title}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
+            {movie.imdb_id && (
+              <a
+                href={`https://www.imdb.com/title/${movie.imdb_id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  group
+                  flex items-center gap-3
+                  rounded-2xl
+                  border border-white/10
+                  bg-white/5
+                  px-5 py-3
+                  backdrop-blur-sm
+                  transition-all
+                  duration-300
+                  hover:border-yellow-500/50
+                  hover:bg-yellow-500
+                  hover:text-black
+                "
+              >
+                <span className="font-medium">View on IMDb</span>
 
-      {/* SIMILAR MOVIES */}
-      {similarMovies.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Similar Movies</h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {similarMovies.map((movie: any) => (
-              <Link key={movie.id} href={`/movies/${movie.id}`}>
-                <Image
-                  src={`${IMAGE_BASE_URL}${movie.poster_path}`}
-                  alt={movie.title}
-                  width={200}
-                  height={300}
-                  className="rounded-lg hover:scale-105 transition"
+                <ExternalLink
+                  size={16}
+                  className="
+                    transition-transform
+                    duration-300
+                    group-hover:translate-x-1
+                    group-hover:-translate-y-1
+                  "
                 />
-
-                <p className="mt-2 text-sm">{movie.title}</p>
-              </Link>
-            ))}
+              </a>
+            )}
           </div>
         </section>
-      )}
 
-      {/* EXTERNAL LINKS */}
-      <section className="space-y-2">
-        {movie.homepage && (
-          <a
-            href={movie.homepage}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block text-blue-600 underline"
-          >
-            Official Website
-          </a>
+        {recommendations.length > 0 && (
+          <section>
+            <TitleComponent title="You may also like" />
+            <LimitedMovieGrid initialMovies={recommendations} />
+          </section>
         )}
-
-        {movie.imdb_id && (
-          <a
-            href={`https://www.imdb.com/title/${movie.imdb_id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block text-blue-600 underline"
-          >
-            View on IMDb
-          </a>
-        )}
-      </section>
-    </div>
+      </div>
+    </>
   );
 }
