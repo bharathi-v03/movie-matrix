@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Search, X } from "lucide-react";
 
 import LimitedMovieGrid from "./LimitedMovieGrid";
@@ -10,6 +10,20 @@ export default function SmartSearch() {
   const [movies, setMovies] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFocus = () => {
+    if (!inputRef.current) return;
+
+    const y =
+      inputRef.current.getBoundingClientRect().top + window.scrollY - 48;
+
+    window.scrollTo({
+      top: y,
+      behavior: "smooth",
+    });
+  };
 
   useEffect(() => {
     if (!query.trim()) {
@@ -54,6 +68,8 @@ export default function SmartSearch() {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            ref={inputRef}
+            onFocus={handleFocus}
             placeholder="Search movies..."
             className="
               w-full
