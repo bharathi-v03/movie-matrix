@@ -28,7 +28,7 @@ const TitlePage = () => {
         </p>
 
         <div className="mt-8 flex items-center gap-3">
-          <div className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-300">
+          <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80">
             🎬 20,000+ Movies
           </div>
 
