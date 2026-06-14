@@ -16,7 +16,8 @@ export default function LimitedMovieGrid({
   return (
     <div
       className="
-        flex gap-5 overflow-x-auto pb-4
+        flex gap-2 sm:gap-4
+        overflow-x-auto pb-4 scroll-smooth
         [&::-webkit-scrollbar]:hidden
         [scrollbar-width:none]
         [-ms-overflow-style:none]
@@ -30,22 +31,20 @@ export default function LimitedMovieGrid({
             group
             relative
             flex-shrink-0
-            w-48
-            transition-all
-            duration-300
+            w-32 sm:w-40 md:w-44
+            transition-transform duration-300
             hover:scale(0.5)
           "
         >
           <div
             className="
               relative
-              w-48
-              h-72
+              w-full
+              aspect-[2/3]
               overflow-hidden
-              rounded-2xl
+              rounded-lg sm:rounded-xl
               bg-zinc-900
-              shadow-lg
-              shadow-black/30
+              shadow-md shadow-black/30
             "
           >
             {movie.poster_path ? (
@@ -53,17 +52,16 @@ export default function LimitedMovieGrid({
                 src={`${IMAGE_BASE_URL}${movie.poster_path}`}
                 alt={movie.title}
                 fill
-                sizes="192px"
+                sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 180px"
                 className="
                   object-cover
-                  transition-transform
-                  duration-500
+                  transition-transform duration-500
                   group-hover:scale-110
                 "
               />
             ) : (
-              <div className="flex items-center justify-center h-full text-sm text-gray-400">
-                No Poster Available
+              <div className="flex items-center justify-center h-full text-[10px] text-gray-400">
+                No Poster
               </div>
             )}
 
@@ -73,35 +71,31 @@ export default function LimitedMovieGrid({
               <div
                 className="
                   absolute
-                  top-3
-                  right-3
-                  flex
-                  items-center
-                  gap-1
+                  top-2 right-2
+                  flex items-center gap-1
                   rounded-full
                   bg-black/70
                   backdrop-blur-md
-                  px-2.5
-                  py-1
+                  px-2 py-0.5
                 "
               >
                 <Star
-                  size={12}
+                  size={11}
                   fill="currentColor"
                   className="text-yellow-400"
                 />
-                <span className="text-xs font-semibold text-white">
+                <span className="text-[9px] sm:text-xs font-semibold text-white">
                   {movie.vote_average?.toFixed(1)}
                 </span>
               </div>
             )}
 
-            <div className="absolute bottom-0 left-0 right-0 p-4">
-              <h3 className="font-semibold text-white line-clamp-2">
+            <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3">
+              <h3 className="font-semibold text-white text-xs sm:text-sm line-clamp-2">
                 {movie.title}
               </h3>
 
-              <p className="text-xs text-gray-300 mt-1">
+              <p className="text-[9px] sm:text-xs text-gray-300 mt-1">
                 {movie.release_date?.split("-")[0]}
               </p>
             </div>
@@ -114,21 +108,17 @@ export default function LimitedMovieGrid({
           href={path}
           className="
             flex-shrink-0
-            w-48
-            h-72
-            rounded-2xl
+            w-32 sm:w-40 md:w-44
+            aspect-[2/3]
+            rounded-lg sm:rounded-xl
             bg-zinc-900
-            flex
-            items-center
-            justify-center
-            transition-all
-            duration-300
+            flex items-center justify-center
+            transition-all duration-300
             hover:bg-red-500
+            active:scale-95
           "
         >
-          <div className="text-center">
-            <p className="text-xl font-bold text-white">Show More</p>
-          </div>
+          <p className="text-xs sm:text-sm font-bold text-white">Show More</p>
         </Link>
       )}
     </div>

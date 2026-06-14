@@ -61,7 +61,8 @@ export default async function MovieDetailsPage({
   return (
     <>
       <PageHeader title={movie.title} />
-      <div className="relative h-[75vh] overflow-hidden">
+
+      <div className="relative h-[calc(100vh-61px)] sm:h-[75vh] overflow-hidden">
         <Image
           src={`${IMAGE_BASE_URL}${movie.backdrop_path}`}
           alt={movie.title}
@@ -74,57 +75,61 @@ export default async function MovieDetailsPage({
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
         <div className="absolute inset-0">
-          <div className="mx-auto flex h-full max-w-7xl items-end px-6 pb-12">
-            <div className="flex flex-col gap-8 md:flex-row md:items-end">
+          <div className="mx-auto flex h-full max-w-7xl items-end px-4 sm:px-6 pb-8 sm:pb-12">
+            <div className="flex flex-col gap-5 md:flex-row md:items-end md:gap-8 items-center md:items-end">
               <Image
                 src={`${IMAGE_BASE_URL}${movie.poster_path}`}
                 alt={movie.title}
-                width={280}
-                height={420}
+                width={180}
+                height={270}
+                sizes="(max-width: 768px) 180px, 280px"
                 className="
-                  rounded-2xl
-                  border border-white/10
-                  shadow-[0_20px_80px_rgba(0,0,0,0.7)]
-                "
+                    w-[180px] h-[270px]
+                    md:w-[280px] md:h-[420px]
+                    rounded-xl sm:rounded-2xl
+                    border border-white/10
+                    shadow-[0_20px_80px_rgba(0,0,0,0.7)]
+                    object-cover
+                  "
               />
 
-              <div className="max-w-3xl space-y-5">
+              <div className="max-w-3xl space-y-4 sm:space-y-5 text-center md:text-left">
                 <div>
-                  <h1 className="text-5xl font-extrabold tracking-tight">
+                  <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
                     {movie.title}
                   </h1>
 
                   {movie.tagline && (
-                    <p className="mt-2 text-lg italic text-gray-400">
+                    <p className="mt-2 text-sm sm:text-lg italic text-gray-400">
                       {movie.tagline}
                     </p>
                   )}
                 </div>
 
-                <div className="flex flex-wrap gap-3">
-                  <div className="flex items-center gap-2 rounded-full bg-red-500 px-4 py-2 font-semibold">
+                <div className="flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-start">
+                  <div className="flex items-center gap-2 rounded-full bg-red-500 px-3 sm:px-4 py-1.5 sm:py-2 font-semibold text-sm sm:text-base">
                     <Star
-                      size={16}
+                      size={14}
                       fill="currentColor"
                       className="text-yellow-300"
                     />
                     {movie.vote_average.toFixed(1)}
                   </div>
 
-                  <div className="rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
+                  <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 backdrop-blur-sm text-sm">
                     {movie.runtime} min
                   </div>
 
-                  <div className="rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
+                  <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 backdrop-blur-sm text-sm">
                     {movie.release_date}
                   </div>
 
-                  <div className="rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
+                  <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 backdrop-blur-sm text-sm">
                     {movie.status}
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                   {movie.genres?.map((genre: any) => (
                     <span
                       key={genre.id}
@@ -132,8 +137,8 @@ export default async function MovieDetailsPage({
                         rounded-full
                         border border-red-500/30
                         bg-red-500/10
-                        px-4 py-2
-                        text-sm
+                        px-3 sm:px-4 py-1.5 sm:py-2
+                        text-xs sm:text-sm
                         text-red-300
                         backdrop-blur-sm
                       "
@@ -143,7 +148,7 @@ export default async function MovieDetailsPage({
                   ))}
                 </div>
 
-                <p className="max-w-2xl text-gray-300 line-clamp-4">
+                <p className="max-w-2xl text-sm sm:text-base text-gray-300 line-clamp-4">
                   {movie.overview}
                 </p>
               </div>
@@ -151,11 +156,11 @@ export default async function MovieDetailsPage({
           </div>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-6 space-y-12 py-6">
+
+      <div className="w-full sm:max-w-7xl sm:mx-auto p-3 sm:px-6 space-y-12 py-6">
         {trailer && (
           <section>
             <TitleComponent title="Trailer" />
-
             <div className="aspect-video overflow-hidden rounded-lg">
               <iframe
                 src={`https://www.youtube.com/embed/${trailer.key}`}
@@ -171,30 +176,37 @@ export default async function MovieDetailsPage({
           <section>
             <TitleComponent title="Cast" />
 
-            <div
-              className="
-                flex gap-4 overflow-x-auto
-                pb-4
-                [&::-webkit-scrollbar]:hidden
-              "
-            >
+            <div className="flex gap-1 sm:gap-4 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden">
               {cast.map((actor: any) => (
-                <div key={actor.id} className="w-32 flex-shrink-0">
-                  {actor.profile_path ? (
-                    <Image
-                      src={`${IMAGE_BASE_URL}${actor.profile_path}`}
-                      alt={actor.name}
-                      width={150}
-                      height={225}
-                      className="rounded-lg mx-auto"
-                    />
-                  ) : (
-                    <div className="w-[150px] h-[225px] bg-gray-200 rounded-lg mx-auto" />
-                  )}
+                <div
+                  key={actor.id}
+                  className="w-20 sm:w-32 flex-shrink-0 text-center"
+                >
+                  <div className="relative mx-auto w-16 sm:w-28">
+                    {actor.profile_path ? (
+                      <Image
+                        src={`${IMAGE_BASE_URL}${actor.profile_path}`}
+                        alt={actor.name}
+                        width={110}
+                        height={165}
+                        className="
+                          rounded-xl
+                          object-cover
+                          shadow-md
+                        "
+                      />
+                    ) : (
+                      <div className="w-16 sm:w-28 h-24 sm:h-36 bg-white/10 rounded-xl mx-auto" />
+                    )}
+                  </div>
 
-                  <p className="mt-2 font-medium">{actor.name}</p>
+                  <p className="mt-2 text-xs sm:text-sm font-semibold text-white line-clamp-1">
+                    {actor.name}
+                  </p>
 
-                  <p className="text-sm text-gray-500">{actor.character}</p>
+                  <p className="text-[10px] sm:text-xs text-gray-400 line-clamp-1">
+                    {actor.character}
+                  </p>
                 </div>
               ))}
             </div>
@@ -204,96 +216,71 @@ export default async function MovieDetailsPage({
         <section>
           <TitleComponent title="Movie Information" />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div
-              className="
-                rounded-2xl
-                border border-white/10
-                bg-white/5
-                p-6
-                backdrop-blur-sm
-              "
-            >
-              <p className="text-sm text-gray-400">Production Company</p>
-
-              <p className="mt-2 text-lg font-semibold">{productionCompany}</p>
+          <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-4">
+            <div className="flex sm:flex-col sm:items-start items-center justify-between gap-2 sm:gap-1 border-b sm:border-b-0 border-white/10 pb-3 sm:rounded-2xl sm:border sm:bg-white/5 sm:p-6">
+              <span className="text-xs sm:text-sm text-gray-400">
+                Production Company
+              </span>
+              <span className="text-sm sm:text-base font-medium text-white sm:mt-2 sm:text-left text-right max-w-[60%] sm:max-w-full truncate">
+                {productionCompany}
+              </span>
             </div>
 
-            <div
-              className="
-                rounded-2xl
-                border border-white/10
-                bg-white/5
-                p-6
-                backdrop-blur-sm
-              "
-            >
-              <p className="text-sm text-gray-400">Production Country</p>
-
-              <p className="mt-2 text-lg font-semibold">
+            <div className="flex sm:flex-col sm:items-start items-center justify-between gap-2 sm:gap-1 border-b sm:border-b-0 border-white/10 pb-3 sm:rounded-2xl sm:border sm:bg-white/5 sm:p-6">
+              <span className="text-xs sm:text-sm text-gray-400">
+                Production Country
+              </span>
+              <span className="text-sm sm:text-base font-medium text-white sm:mt-2 sm:text-left text-right max-w-[60%] sm:max-w-full truncate">
                 {productionCountries}
-              </p>
+              </span>
             </div>
 
             {hasBudget && (
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-                <p className="text-sm text-gray-400">Budget</p>
-
-                <p className="mt-2 text-lg font-semibold">
+              <div className="flex sm:flex-col sm:items-start items-center justify-between gap-2 sm:gap-1 border-b sm:border-b-0 border-white/10 pb-3 sm:rounded-2xl sm:border sm:bg-white/5 sm:p-6">
+                <span className="text-xs sm:text-sm text-gray-400">Budget</span>
+                <span className="text-sm sm:text-base font-medium text-white sm:mt-2">
                   {formatMoney(movie.budget)}
-                </p>
+                </span>
               </div>
             )}
 
             {hasRevenue && (
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-                <p className="text-sm text-gray-400">Revenue</p>
-
-                <p className="mt-2 text-lg font-semibold">
+              <div className="flex sm:flex-col sm:items-start items-center justify-between gap-2 sm:gap-1 border-b sm:border-b-0 border-white/10 pb-3 sm:rounded-2xl sm:border sm:bg-white/5 sm:p-6">
+                <span className="text-xs sm:text-sm text-gray-400">
+                  Revenue
+                </span>
+                <span className="text-sm sm:text-base font-medium text-white sm:mt-2">
                   {formatMoney(movie.revenue)}
-                </p>
+                </span>
               </div>
             )}
           </div>
         </section>
 
         <section>
-          <div className="mb-6 flex items-center gap-3">
-            <div className="h-8 w-1 rounded-full bg-red-500" />
-            <h2 className="text-3xl font-bold">Links</h2>
+          <div className="mb-4 sm:mb-6 flex items-center gap-3">
+            <div className="h-6 sm:h-8 w-1 rounded-full bg-red-500" />
+            <h2 className="text-2xl sm:text-3xl font-bold">Links</h2>
           </div>
 
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-3 sm:gap-4">
             {movie.homepage && (
               <a
                 href={movie.homepage}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  group
-                  flex items-center gap-3
-                  rounded-2xl
-                  border border-white/10
-                  bg-white/5
-                  px-5 py-3
+                  group flex items-center gap-3
+                  rounded-2xl border border-white/10
+                  bg-white/5 px-4 sm:px-5 py-2.5 sm:py-3
+                  text-sm sm:text-base
                   backdrop-blur-sm
                   transition-all
-                  duration-300
-                  hover:border-red-500/50
-                  hover:bg-red-500
+                  hover:border-red-500/50 hover:bg-red-500
                 "
               >
-                <span className="font-medium">Official Website</span>
-
-                <ExternalLink
-                  size={16}
-                  className="
-                    transition-transform
-                    duration-300
-                    group-hover:translate-x-1
-                    group-hover:-translate-y-1
-                  "
-                />
+                Official Website
+                <ExternalLink size={16} />
               </a>
             )}
 
@@ -303,31 +290,17 @@ export default async function MovieDetailsPage({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  group
-                  flex items-center gap-3
-                  rounded-2xl
-                  border border-white/10
-                  bg-white/5
-                  px-5 py-3
+                  group flex items-center gap-3
+                  rounded-2xl border border-white/10
+                  bg-white/5 px-4 sm:px-5 py-2.5 sm:py-3
+                  text-sm sm:text-base
                   backdrop-blur-sm
                   transition-all
-                  duration-300
-                  hover:border-yellow-500/50
-                  hover:bg-yellow-500
-                  hover:text-black
+                  hover:border-yellow-500/50 hover:bg-yellow-500 hover:text-black
                 "
               >
-                <span className="font-medium">View on IMDb</span>
-
-                <ExternalLink
-                  size={16}
-                  className="
-                    transition-transform
-                    duration-300
-                    group-hover:translate-x-1
-                    group-hover:-translate-y-1
-                  "
-                />
+                View on IMDb
+                <ExternalLink size={16} />
               </a>
             )}
           </div>

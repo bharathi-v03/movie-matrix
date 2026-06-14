@@ -69,7 +69,10 @@ export default function InfiniteMovieGrid({
           loadMoreMovies();
         }
       },
-      { threshold: 0.1 },
+      {
+        threshold: 0.1,
+        rootMargin: "200px",
+      },
     );
 
     observer.observe(current);
@@ -79,7 +82,7 @@ export default function InfiniteMovieGrid({
 
   return (
     <>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6 p-3 sm:p-6">
         {movies.map((movie) => (
           <Link key={movie.id} href={`/movies/${movie.id}`} className="group">
             <div
@@ -87,12 +90,9 @@ export default function InfiniteMovieGrid({
                 relative
                 aspect-[2/3]
                 overflow-hidden
-                rounded-2xl
+                rounded-xl sm:rounded-2xl
                 bg-zinc-900
-                shadow-lg
-                transition-all
-                duration-300
-                group-hover:shadow-2xl
+                transition-all duration-300
               "
             >
               {movie.poster_path ? (
@@ -100,16 +100,15 @@ export default function InfiniteMovieGrid({
                   src={`${IMAGE_BASE_URL}${movie.poster_path}`}
                   alt={movie.title}
                   fill
-                  sizes="300px"
+                  sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 20vw"
                   className="
                     object-cover
-                    transition-transform
-                    duration-500
+                    transition-transform duration-500
                     group-hover:scale-110
                   "
                 />
               ) : (
-                <div className="flex h-full items-center justify-center text-sm text-gray-400">
+                <div className="flex h-full items-center justify-center text-xs sm:text-sm text-gray-400">
                   No Poster Available
                 </div>
               )}
@@ -120,17 +119,14 @@ export default function InfiniteMovieGrid({
                 <div
                   className="
                     absolute
-                    top-3
-                    right-3
-                    flex
-                    items-center
-                    gap-1
+                    top-2 sm:top-3
+                    right-2 sm:right-3
+                    flex items-center gap-1
                     rounded-full
                     bg-black/70
                     backdrop-blur-md
-                    px-3
+                    px-2 sm:px-3
                     py-1
-                    shadow-lg
                   "
                 >
                   <Star
@@ -145,13 +141,13 @@ export default function InfiniteMovieGrid({
                 </div>
               )}
 
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <h3 className="font-semibold text-white line-clamp-2">
+              <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                <h3 className="font-semibold text-white text-sm sm:text-base line-clamp-2">
                   {movie.title}
                 </h3>
 
                 {movie.release_date && (
-                  <p className="mt-1 text-xs text-gray-300">
+                  <p className="mt-1 text-[10px] sm:text-xs text-gray-300">
                     {movie.release_date.split("-")[0]}
                   </p>
                 )}
@@ -162,13 +158,13 @@ export default function InfiniteMovieGrid({
       </div>
 
       {loading && (
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6 px-3 sm:px-6">
           {Array.from({ length: 5 }).map((_, index) => (
             <div
               key={index}
               className="
                 aspect-[2/3]
-                rounded-2xl
+                rounded-xl sm:rounded-2xl
                 bg-zinc-800
                 animate-pulse
               "
@@ -178,11 +174,13 @@ export default function InfiniteMovieGrid({
       )}
 
       {!loading && movies.length === 0 && (
-        <div className="py-20 text-center text-gray-400">No movies found.</div>
+        <div className="py-20 text-center text-gray-400 text-sm sm:text-base">
+          No movies found.
+        </div>
       )}
 
       {!hasMore && movies.length > 0 && (
-        <div className="py-10 text-center text-gray-500">
+        <div className="py-10 text-center text-gray-500 text-sm sm:text-base">
           You've reached the end 🎬
         </div>
       )}

@@ -46,36 +46,36 @@ export default async function MovieSection() {
   ];
 
   return (
-    <section className="p-6 space-y-10">
+    <section className="p-3 sm:p-6 space-y-6 sm:space-y-10">
       <SmartSearch />
+
       {sections.map((section) => (
         <div key={section.href}>
           <Link
             href={section.href}
             className="
               group
-              mb-4
+              mb-3 sm:mb-4
               inline-flex
               items-center
               gap-2
               rounded-xl
-              py-2
-              text-2xl
+              py-1 sm:py-2
+              text-lg sm:text-2xl
               font-bold
-              transition-all
-              duration-300
+              transition-all duration-300
               hover:text-red-500
             "
           >
-            <span className="h-8 w-1 rounded-full bg-red-500" />
+            <span className="h-6 sm:h-8 w-1 rounded-full bg-red-500" />
+
             <span>{section.title}</span>
 
             <ChevronRight
-              size={24}
-              strokeWidth={4}
+              size={20}
               className="
-                transition-transform
-                duration-300
+                sm:w-6 sm:h-6
+                transition-transform duration-300
                 group-hover:translate-x-1
               "
             />
