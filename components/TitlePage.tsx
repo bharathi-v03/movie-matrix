@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const TitlePage = () => {
   return (
-    <div className="relative flex items-center justify-center h-[75vh] sm:h-[85vh] overflow-hidden">
+    <div className="relative flex items-center justify-center h-[80vh] sm:h-[85vh] overflow-hidden">
       <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6 max-w-3xl">
         <div className="mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3 rounded-full border border-white/10 bg-white/5 px-3 sm:px-4 py-2 backdrop-blur-md">
           <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-red-500 shadow-lg shadow-red-500/30">
