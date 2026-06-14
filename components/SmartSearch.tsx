@@ -13,7 +13,6 @@ export default function SmartSearch() {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // ✅ FIXED MOBILE SCROLL (no manual math)
   const handleFocus = () => {
     if (!inputRef.current) return;
 
@@ -126,9 +125,9 @@ export default function SmartSearch() {
       )}
 
       {loading && (
-        <div className="mb-10">
-          <div className="flex gap-3 sm:gap-4 overflow-x-hidden px-3 sm:px-0">
-            {[...Array(6)].map((_, index) => (
+        <div className="mb-14">
+          <div className="flex gap-3 sm:gap-4 overflow-x-hidden sm:px-0">
+            {[...Array(8)].map((_, index) => (
               <div key={index} className="flex-shrink-0 w-32 sm:w-40 md:w-44">
                 <div className="relative aspect-[2/3] rounded-lg sm:rounded-xl bg-white/5 overflow-hidden">
                   <div className="absolute inset-0 animate-pulse bg-gradient-to-b from-white/10 via-white/5 to-white/10" />
