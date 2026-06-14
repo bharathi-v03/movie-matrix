@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 import { getMovieDetails } from "@/services/tmdb";
 import { IMAGE_BASE_URL } from "@/constants";
