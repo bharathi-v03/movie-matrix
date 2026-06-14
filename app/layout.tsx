@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Discover • Search • Explore",
   icons: {
     icon: "/images/movie-icon.ico",
+    shortcut: "/images/movie-icon.ico",
+    apple: "/images/movie-icon.ico",
   },
 };
 
